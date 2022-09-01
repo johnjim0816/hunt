@@ -1,8 +1,10 @@
-#!/usr/bin/env python
-
+import sys,os
+curr_path = os.path.dirname(os.path.abspath(__file__))  # current path
+parent_path = os.path.dirname(curr_path)  # parent path
+p_parent_path = os.path.dirname(parent_path)
+sys.path.append(p_parent_path)  # add to system path
 import copy
 import glob
-import os
 import time
 import numpy as np
 from pathlib import Path
@@ -12,7 +14,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 
-from envs import MGEnv, CleanupEnv, HarvestEnv, GridWorldEnv,multi_GridWorldEnv
+from envs import MGEnv, GridWorldEnv,multi_GridWorldEnv
 from algorithm.ppo import PPO
 from algorithm.model import Policy
 

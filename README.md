@@ -1,3 +1,4 @@
+refered from [RPG](https://github.com/staghuntrpg/RPG)
 ## 1. Environments supported:
 
 - Matrix Game (MG)
@@ -44,7 +45,7 @@ Here we give an example installation on CUDA == 10.1. For non-GPU & other CUDA v
 
 ```
 # create conda environment
-conda create -n rpg python==3.6.1
+conda create -n rpg python=3.6
 conda activate rpg
 pip install torch==1.5.1+cu101 torchvision==0.6.1+cu101 -f https://download.pytorch.org/whl/torch_stable.html
 
