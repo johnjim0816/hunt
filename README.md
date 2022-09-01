@@ -45,21 +45,19 @@ Here we give an example installation on CUDA == 10.1. For non-GPU & other CUDA v
 
 ```
 # create conda environment
-conda create -n rpg python=3.6
-conda activate rpg
-pip install torch==1.5.1+cu101 torchvision==0.6.1+cu101 -f https://download.pytorch.org/whl/torch_stable.html
-
-pip install gym matplotlib imageio opencv-python tensorboardX
+conda create -n hunt python=3.7
+conda activate hunt
+pip install torch==1.10.0+cu113 torchvision==0.11.0+cu113 torchaudio==0.10.0 --extra-index-url https://download.pytorch.org/whl/torch_stable.html
+pip install -r requirements.txt
 ```
 
 ## 4. Train
 
-Here we use train_GW.sh as an example:
+Here we use train_StagHuntGW.sh as an example:
 
   ```
   cd scripts
-  chmod +x ./train_GW.sh
-  ./train_GW.sh
+  sh train_StagHuntGW.sh
   ```
 
 Local results are stored in subfolder scripts/results.
