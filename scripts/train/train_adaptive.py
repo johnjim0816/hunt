@@ -1,5 +1,9 @@
-#!/usr/bin/env python
-
+import sys,os
+curr_path = os.path.dirname(os.path.abspath(__file__))  # current path
+parent_path = os.path.dirname(curr_path)  # parent path
+p_parent_path = os.path.dirname(parent_path)
+sys.path.append(p_parent_path)  # add to system path
+print(p_parent_path)
 import copy
 import glob
 import os
