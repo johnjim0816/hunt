@@ -108,9 +108,7 @@ The Monster-Hunt and Escalation tasks are implemented according to the Markov St
 
 ## 3. Installation 
 
-Here we give an example installation on CUDA == 10.1. For non-GPU & other CUDA version installation, please refer to the [PyTorch website](https://pytorch.org/get-started/locally/).
-
-```
+```bash
 # create conda environment
 conda create -n hunt python=3.7
 conda activate hunt
@@ -122,10 +120,8 @@ pip install -r requirements.txt
 
 Here we use train_StagHuntGW.sh as an example:
 
-  ```
-  cd scripts
-  sh train_StagHuntGW.sh
-  ```
-
-Local results are stored in subfolder scripts/results.
->>>>>>> a2ddf6352533c117a098dc7c22a6c7432b1f1093
+```bash
+cd scripts
+sh train_StagHuntGW.sh
+```
+对于adaptive，如 ```train_StagHuntGW_adaptive.sh```，需要在RPG上设置不同的reward训练num_policy_candidates=6个不同的版本，复制paper-505文件夹并改名为paper，并将每个对应run/models下的agent0_model.pt改名为Policy(1-6)_agent0_model.pt。
