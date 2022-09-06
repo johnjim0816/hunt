@@ -7,7 +7,7 @@ model_dir = f"./results/StagHuntGW/paper-505/run{run_id}/logs/agent{agent_id}/di
 ea=event_accumulator.EventAccumulator(f"{model_dir}/{file_name}") 
 ea.Reload()
 
-entropies =ea.scalars.Items(f"agent{agent_id}/dist_entropy")
+entropies = ea.scalars.Items(f"agent{agent_id}/dist_entropy")
 selected_entropies = [entropies[i].value for i in range(1500,2000)]
 print(np.mean(selected_entropies))
 print(np.std(selected_entropies))
