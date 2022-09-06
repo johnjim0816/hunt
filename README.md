@@ -112,7 +112,7 @@ The Monster-Hunt and Escalation tasks are implemented according to the Markov St
 # create conda environment
 conda create -n hunt python=3.7
 conda activate hunt
-pip install torch==1.10.0+cu113 torchvision==0.11.0+cu113 torchaudio==0.10.0 --extra-index-url https://download.pytorch.org/whl/torch_stable.html
+pip install torch==1.10.0+cu113 torchvision==0.11.0+cu113 torchaudio==0.10.0 --extra-index-url https://download.pytorch.org/whl/cu113
 pip install -r requirements.txt
 ```
 

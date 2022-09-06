@@ -1,12 +1,17 @@
+import sys,os
+curr_path = os.path.dirname(os.path.abspath(__file__))  # current path
+parent_path = os.path.dirname(curr_path)  # parent path
+p_parent_path = os.path.dirname(parent_path)
+sys.path.append(p_parent_path)  # add to system path
 import numpy as np
 from pathlib import Path
-
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 
-from envs import MGEnv, CleanupEnv, HarvestEnv, GridWorldEnv,GridWorldAdaptiveEnv, MGSingleEnv, MGAdaptiveEnv
+from envs import MGEnv, GridWorldEnv,GridWorldAdaptiveEnv, MGSingleEnv, MGAdaptiveEnv
 from algorithm.ppo import PPO
 from algorithm.model import Policy
 
@@ -15,7 +20,6 @@ from utils.env_wrappers import SubprocVecEnv, DummyVecEnv, SingleSubprocVecEnv, 
 from utils.util import update_linear_schedule
 from utils.storage import RolloutStorage
 from utils import utility_funcs
-import os
 import shutil
 import imageio
     
@@ -39,6 +43,8 @@ def main():
     logger = SummaryWriter(str(log_dir))
     gifs_dir = run_dir / 'gifs'	
     os.makedirs(str(gifs_dir))
+    res_dir = run_dir/'res'
+    os.makedirs(str(res_dir))
 	
     # env	
     if args.env_name == "StagHunt":	
@@ -54,7 +60,7 @@ def main():
     #Policy network    	    
     actor_critic = []	    
     for i in range(args.num_agents):
-        ac = torch.load(str(args.model_dir) + 'run' + str(args.seed) + "/finetune/models/agent%i_model" % i + ".pt")['model'].to(device)
+        ac = torch.load(str(args.model_dir) + 'run' + str(args.seed) + "/models/agent%i_model" % i + ".pt")['model'].to(device)
         actor_critic.append(ac)
         
     coop_num = []
@@ -101,6 +107,13 @@ def main():
             masks.append(torch.ones(1,1).to(device))	
             
         frames_dir = str(gifs_dir) + '/episode%i/'%episode + 'frames/'
+        frames_res_dir = str(res_dir) + '/episode%i/'%episode + '/'
+        if not os.path.exists(frames_res_dir):
+                os.makedirs(frames_res_dir)
+        # StagHuntGW
+        tmp_rewards_ep = pd.DataFrame(columns=['agent0','agent1'])
+        tmp_states_ep = pd.DataFrame(columns=['my_pos1','other_pos1','stag_pos1','hare1_pos1','hare2_pos1','my_pos2','other_pos2','stag_pos2','hare1_pos2','hare2_pos2'])
+        tmp_actions_ep = pd.DataFrame(columns=['agent0','agent1'])
         for step in range(args.episode_length):	   
             print("step %i of %i" % (step, args.episode_length))	
             # Sample actions
@@ -123,9 +136,11 @@ def main():
                 recurrent_c_statess_critic[i].copy_(recurrent_c_states_critic)              	
                 one_hot_action[action] = 1	
                 one_hot_actions.append(one_hot_action)	
-
+            tmp_actions_ep = tmp_actions_ep.append({'agent0':np.argmax(one_hot_actions[0]), 'agent1':np.argmax(one_hot_actions[1])}, ignore_index=True)
             # Obser reward and next obs	
             state, reward, done, infos = env.step(one_hot_actions)
+            tmp_rewards_ep = tmp_rewards_ep.append({'agent0':reward[0],'agent1':reward[1]}, ignore_index=True)
+            tmp_states_ep = tmp_states_ep.append({'my_pos1':state[0][0],'other_pos1':state[0][1],'stag_pos1':state[0][2],'hare1_pos1':state[0][3],'hare2_pos1':state[0][4],'my_pos2':state[1][0],'other_pos2':state[1][1],'stag_pos2':state[1][2],'hare1_pos2':state[1][3],'hare2_pos2':state[1][4]}, ignore_index=True)
             if any(done):
                 break	
 
@@ -138,7 +153,9 @@ def main():
                 if len(env.observation_space[0]) == 1:	
                     share_obs[i].copy_(torch.tensor(state.reshape(1, -1),dtype=torch.float32))	
                     obs[i].copy_(torch.tensor(state[:,i,:],dtype=torch.float32))	
-                 
+        tmp_actions_ep.to_csv(frames_res_dir+'actions.csv',index=False)
+        tmp_rewards_ep.to_csv(frames_res_dir+'rewards.csv',index=False)
+        tmp_states_ep.to_csv(frames_res_dir+'states.csv',index=False)         
         eval_rewards.append(policy_reward)
         if args.save_gifs:
             utility_funcs.make_gif_from_image_dir(str(gifs_dir) + '/episode%i/'%episode, frames_dir, gif_name=args.env_name + '_trajectory')
