@@ -45,9 +45,9 @@ class GridWorldEnv(object):
             self.gore2_num = 0
             self.hare1_num = 0
             self.hare2_num = 0
-            self.coop = 5  
-            self.defect = -2
-            self.gore = 2
+            self.coop = 5 # 合作的奖励
+            self.defect = -2 # 失败的奖励
+            self.gore = 2 # 单独猎杀的奖励
             self.reward_randomization = args.reward_randomization
             if self.reward_randomization:
                 #coop = [5,4,0,5,5,-5,-5,5]
@@ -126,10 +126,11 @@ class GridWorldEnv(object):
             else:
                 points.append(index)
                 num_index += 1
-        
+        points = [[4, 3], [3, 2], [2, 0], [1, 2], [1, 4]] # 固定位置，agent1，agent2，stag，hare1，hare2
+        points = [[4, 3], [3, 2], [2, 0], [4, 2], [4, 4]] # 固定位置，agent1，agent2，stag，hare1，hare2
+        # points = [[1, 0], [1, 2], [4, 4], [3, 3], [1, 3]] # 固定位置
         for i in range(self.num_agents):
             self.agents_start_pos.append(points[i])
-
         self.base_map[points[-3][0], points[-3][1]] = 'S'
         self.stag_points += 1
         self.stag_pos = np.array(points[-3])
@@ -548,7 +549,7 @@ class GridWorldEnv(object):
         charA = self.base_map[pos0[0], pos0[1]]
         charB = self.base_map[pos1[0], pos1[1]]
         if charA == 'S':
-            if charB == 'S':
+            if charB == 'S': # 如果两个agent都在stag上，说明产生合作
                 self.coop_num += 1
                 self.agents[0].reward_this_turn += self.coop
                 self.agents[1].reward_this_turn += self.coop

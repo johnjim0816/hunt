@@ -1,5 +1,6 @@
-<<<<<<< HEAD
 refered from [RPG](https://github.com/staghuntrpg/RPG)
+
+关于stag（鹿）,hare（兔）等名词可以了解[游戏背景](https://en.wikipedia.org/wiki/Stag_hunt)
 ## 1. Environments supported:
 
 - Matrix Game (MG)

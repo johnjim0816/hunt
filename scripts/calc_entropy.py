@@ -3,7 +3,7 @@ import numpy as np
 run_id = 3
 agent_id = 1
 file_name = 'events.out.tfevents.1662017492.jiangji-policy-diversity-1-76cd66576b-xcmv4'
-model_dir = f"./results/StagHuntGW/paper-505/run{run_id}/logs/agent{agent_id}/dist_entropy/dist_entropy"
+model_dir = f"./results/StagHuntGW/paper-505_back/run{run_id}/logs/agent{agent_id}/dist_entropy/dist_entropy"
 ea=event_accumulator.EventAccumulator(f"{model_dir}/{file_name}") 
 ea.Reload()
 
