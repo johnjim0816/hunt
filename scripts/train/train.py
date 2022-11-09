@@ -22,7 +22,7 @@ from config import get_config
 from utils.env_wrappers import SubprocVecEnv, DummyVecEnv
 from utils.util import update_linear_schedule
 from utils.storage import RolloutStorage
-import shutil
+
 
 def make_parallel_env(args):
     def get_env_fn(rank):
